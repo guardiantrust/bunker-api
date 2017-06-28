@@ -1,0 +1,26 @@
+{
+  "name": "bunker-api",
+  "version": "1.0.0",
+  "description": "NodeJS Project for Bunker-Kafka",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guardiantrust/bunker-api.git"
+  },
+  "keywords": [
+    "Industry",
+    "4.0",
+    "Bunker",
+    "Kronos",
+    "Automation"
+  ],
+  "author": "Aaron Peterson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guardiantrust/bunker-api/issues"
+  },
+  "homepage": "https://github.com/guardiantrust/bunker-api#readme"
+}
