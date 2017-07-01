@@ -22,5 +22,16 @@
   "bugs": {
     "url": "https://github.com/guardiantrust/bunker-api/issues"
   },
-  "homepage": "https://github.com/guardiantrust/bunker-api#readme"
+  "homepage": "https://github.com/guardiantrust/bunker-api#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1",
+    "loadash": "0.0.1",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.11.0",
+    "morgan": "^1.8.2",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1"
+  }
 }
