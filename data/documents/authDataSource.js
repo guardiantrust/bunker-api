@@ -1,35 +1,29 @@
-var mongoose = require('mongoose');
-var cache = require('redis');
+var mongoose = require('../documents/mongodbInstance');
 var Login = require('../../models/authentication/login');
-var cache = require('../cache/redisCache');
 
 
-var exports = module.exports;
- exports.ValidateLogin = function(login, callback){
-    // validate values
-    if(!login.userName || !login.password){
-        callback(new Error('Login credentials not complete!'), false);
-        return;
+
+module.exports = {
+    ValidateLogin:  function (login) {
+        try {
+            // validate values
+            if (!login.userName || !login.password) {
+                console.log("authDataSource: Error with Credentials");
+                return false;
+            }
+            var result = Login.findOne({ userName: login.userName }).exec();
+            if (!result) {
+                console.log("authDataSource: Did not find user in db");
+            }
+            
+            return result;
+
+        }
+        catch (err) {
+            console.log("authDataSource: " + err);
+        }
     }
-
-    //check cache for user info
-    cache.client.getAsync(login.userName).then(function(res){
-        if(res){
-            callback(null, true);
-            return;
-        }
-    });
-
-    var query = Login.findOne({userName: login.userName});
-    query.then(function(result){
-        if(result){
-            callback(null, false);
-            return;
-        }
-    });
-
-    callback(null, false);
-};
+}
 
 
 

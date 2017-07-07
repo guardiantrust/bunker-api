@@ -1,19 +1,22 @@
-'use strict'
+var Joi = require('joi');
 
-[
-    'DB_CONNECTION',
-    'DB_USERNAME',
-    'DB_PASSWORD'
-].forEach((name0=> {
-    if(!process.env[name]) {
-        throw new Error('Environment variable ${name} is missing')
-    }
-}))
+const schema = Joi.object().keys({
+    db_connection: Joi.string(),
+    db_username: Joi.string(),
+    db_password: Joi.string()
+})
+
+const {err, value: envVars } = Joi.validate(process.env, schema)
+
+if(err) {
+    throw new Error('Error with config in EventStream');
+}
 
 const config = {
-    db_connection: process.env.DB_CONNECTION,
-    db_username: process.env.DB_USERNAME,
-    db_password: process.env.DB_PASSWORD
+    db_connection: envVars.DB_CONNECTION,
+    db_username: envVars.DB_USERNAME,
+    db_password: envVars.DB_PASSWORD
 }
+
 
 module.exports = config
