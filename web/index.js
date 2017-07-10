@@ -17,14 +17,16 @@ app.post('/auth/token', function (req, res) {
         var pass = passwordHash.generate(req.body.password);
         console.log(pass);
         var login = new Login({ userName: req.body.username, password: pass });
+        
     } else {
         res.status(401);
     }
 
     // Attempt to get token
     try {
+        
         var t = authToken.GetToken(login);
-        console.log(t);
+        console.log("Token:" +t);
         if (token) {
             res.status(200).send(token);
         } else {

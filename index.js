@@ -69,27 +69,34 @@ app.post("/loginUser", function(req, res){
         var password = req.body.password;
     }
     console.log(username);
-    var user;
-    loginUser.findOne({'username' : username}, function(err, foundUser){
-        if(err)
-        {
-            console.log("Error finding user");
-            return;
-        }
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function(){
+        console.log("Connected");
+    })
 
-        user = foundUser;
-    });
-    console.log(user);
+        loginUser.findOne({'userName': username}, function(err, res){
+            if(err){
+                console.log("Error finding user");
+            }else{
+                if(res ){
+                    console.log(res.password);
+                    res.statusCOde = 200;
+                    return;
+                }
+            }
+        });
 
-    if( ! user) {
-        user = new loginUser({userName: username, password: password, lastLogin: Date.now()});
-        user.save(function (err) {
+        var user = new loginUser({userName: username, password: password, lastLogin: Date.now()});
+        user.save(function (err, user) {
+            console.log("save user");
             if(err) console.log(err);
+            console.log(user.password);
 
         });
-    } else{ res.status(401).json({message: "Invalid"});
 
-    }
+res.send(200);
+    
 });
 
 app.listen(9010, function() {

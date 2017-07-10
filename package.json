@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/guardiantrust/bunker-api#readme",
   "dependencies": {
+    "async": "^2.5.0",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
