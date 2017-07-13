@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var passwordHash = require('password-hash');
+
 var Login = require('../models/authentication/login');
 var authToken = require('../web/router/authentication/token');
 var app = express();
@@ -12,26 +12,24 @@ app.use(
 
 // authentication token request
 app.post('/auth/token', function (req, res) {
-    var token;
     if (req.body.username && req.body.password) {
-        var pass = passwordHash.generate(req.body.password);
-        console.log(pass);
-        var login = new Login({ userName: req.body.username, password: pass });
-        
+
+        var login = new Login({ userName: req.body.username, password: req.body.password });
+
     } else {
         res.status(401);
     }
 
     // Attempt to get token
     try {
-        
-        var t = authToken.GetToken(login);
-        console.log("Token:" +t);
-        if (token) {
-            res.status(200).send(token);
-        } else {
-            res.status(401).send();
-        }
+
+        authToken.GetToken(login).then(function (token) {
+            if (token) {
+                res.status(200).send(token);
+            } else {
+                res.status(401).send();
+            }
+        });
     }
     catch (err) {
         console.log("Danger Will Robinson!" + err);

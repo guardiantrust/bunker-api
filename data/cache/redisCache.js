@@ -1,11 +1,13 @@
 var redis = require('redis');
 var logging = require('winston');
 var bluebird = require('bluebird');
-
 var env = require('../../config/index');
-logging.level = env.log_level;
+
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
+
+logging.level = env.log_level;
+
 
 var client = redis.createClient(env.cache_url, env.cache_port);
 
