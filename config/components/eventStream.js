@@ -12,8 +12,8 @@ if(err) {
 }
 
 const config = {
-    url: envVars.EVENTSTREAM_URL,
-    port: envVars.EVENTSTREAM_PORT
+    kafka_url: envVars.EVENT_STREAM_URL,
+    auth_topic: envVars.EVENT_STREAM_AUTH_TOPIC
 }
 
 
