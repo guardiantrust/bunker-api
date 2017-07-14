@@ -1,4 +1,4 @@
-var Kafka = require('no-kafka');
+var Kafka = require('kafka-node');
 var env = require('../../config/index');
 
 module.exports = {
