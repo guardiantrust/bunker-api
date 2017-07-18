@@ -1,5 +1,5 @@
 var passport = require("passport");
-//var authDS = require("../../../data/documents/authDataSource");
+var authDS = require("../../../data/documents/authDataSource");
 var authEvent = require('../../../data/events/authEvent');
 var authCache = require("../../../data/cache/authCache");
 var env = require("../../../config/index");
@@ -15,16 +15,16 @@ module.exports.GetToken = async function(login) {
     var userLoggedIn = false;
 
     try {
-        var userLogin = await authEvent.AuthenticateUser(login.userName);
+        //Check Cache for user
         var cachedUserPassword = await authCache.GetLogin(login.userName);
         if (cachedUserPassword != undefined || cachedUserPassword != null) {
             userLoggedIn = await checkPassword(login.password, cachedUserPassword);
         } else {
             // Check DB for user
-
-            // if (userLogin != undefined) {
-            //     userLoggedIn = await checkPassword(login.password, userLogin.password);
-            // }
+            var userLogin = await authDS.ValidateLogin(login.userName);
+            if (userLogin != undefined) {
+                userLoggedIn = await checkPassword(login.password, userLogin.password);
+            }
         }
 
         if (!userLoggedIn) {
@@ -33,8 +33,13 @@ module.exports.GetToken = async function(login) {
             console.log("Login Success");
             if (cachedUserPassword === undefined || cachedUserPassword == null) {
                 var hashedPassword = await encryptPassword(login.password);
-                // Save user in cache
-                await authCache.AddLogin(login.userName, hashedPassword);
+                var [a, b] = await Promise.all([
+                    // Save user in cache
+                    authCache.AddLogin(login.userName, hashedPassword),
+                    // Publish user auth event
+                    authEvent.AuthenticateUser(login.userName),
+                ]);
+
             }
             var payload = { id: login.userName };
             var token = jwt.sign(payload, env.secureKey);

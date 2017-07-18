@@ -2,13 +2,13 @@ var Kafka = require("kafka-node");
 var env = require("../../config/index");
 var HighLevelProducer = Kafka.HighLevelProducer;
 var KeyedMessage = Kafka.KeyedMessage;
-var Client = Kafka.k;
+var Client = Kafka.Client;
 var producer;
 var connected;
 
 module.exports = {
     Create: function(clientName) {
-        let client = new Client(env.kafka_url, clientName, {
+        var client = new Client(env.kafka_url, clientName, {
             sessionTimeout: 3000,
             retries: 3
         });
