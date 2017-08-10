@@ -13,7 +13,6 @@ app.use(
 // authentication token request
 app.post('/auth/token', function (req, res) {
     if (req.body.username && req.body.password) {
-
         var login = new Login({ userName: req.body.username, password: req.body.password });
 
     } else {

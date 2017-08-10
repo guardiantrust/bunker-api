@@ -13,7 +13,6 @@ const salts = 10;
 
 module.exports.GetToken = async function(login) {
     var userLoggedIn = false;
-
     try {
         //Check Cache for user
         var cachedUserPassword = await authCache.GetLogin(login.userName);
