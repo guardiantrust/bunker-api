@@ -39,6 +39,11 @@ app.post('/auth/token', function (req, res) {
 
 });
 
+// company GET request
+app.get('api/company/:id', function (req, res) {
+
+});
+
 app.listen(5000, function () {
     console.log("Express running");
 });

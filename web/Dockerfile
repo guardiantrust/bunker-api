@@ -7,7 +7,7 @@ RUN apt-get -y install python-software-properties git build-essential
 RUN apt-get update
 RUN apt-get -y install nodejs
 
-ADD package.json /package.json
+ADD package.json ../package.json
 RUN cd /tmp && npm install
 RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 
@@ -21,6 +21,6 @@ RUN npm install
 EXPOSE 5000
  #Directory of app
 
- CMD["node", "index.js"]
+CMD [ "npm" , "index.js" ]
 
 
