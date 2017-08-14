@@ -34,9 +34,6 @@ app.post('/auth/token', function (req, res) {
         console.log("Danger Will Robinson!" + err);
         res.status(401).send(err);
     }
-    console.log("Done");
-
-
 });
 
 // company GET request

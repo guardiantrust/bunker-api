@@ -7,11 +7,10 @@ var Login = require("../../../models/authentication/login");
 var passwordHash = require('password-hash');
 var jwt = require('jsonwebtoken');
 var crypt = require('bcrypt');
-authEvent.Create
 const salts = 10;
 
 
-module.exports.GetToken = async function(login) {
+module.exports.GetToken = async function (login) {
     var userLoggedIn = false;
     try {
         //Check Cache for user
@@ -29,17 +28,13 @@ module.exports.GetToken = async function(login) {
         if (!userLoggedIn) {
             return null;
         } else {
-            console.log("Login Success");
             if (cachedUserPassword === undefined || cachedUserPassword == null) {
+                
                 var hashedPassword = await encryptPassword(login.password);
-                var [a, b] = await Promise.all([
-                    // Save user in cache
-                    authCache.AddLogin(login.userName, hashedPassword),
-                    // Publish user auth event
-                    authEvent.AuthenticateUser(login.userName),
-                ]);
 
+                await authCache.AddLogin(login.userName, hashedPassword);
             }
+            authEvent.AuthenticateUser(login.userName);
             var payload = { id: login.userName };
             var token = jwt.sign(payload, env.secureKey);
             return token;
@@ -48,9 +43,10 @@ module.exports.GetToken = async function(login) {
     } catch (err) {
         console.log("token error: " + err);
     }
+
 };
 
-var encryptPassword = async function(password) {
+var encryptPassword = async function (password) {
     try {
         var hashedPassword = await crypt.hash(password, salts);
         console.log(hashedPassword);
@@ -60,7 +56,7 @@ var encryptPassword = async function(password) {
     }
 };
 
-var checkPassword = async function(password, hashedPassword) {
+var checkPassword = async function (password, hashedPassword) {
     try {
         //console.log(password + " " + hashedPassword);
         var isEqual = await crypt.compare(password, hashedPassword);

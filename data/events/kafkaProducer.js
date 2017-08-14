@@ -33,7 +33,6 @@ module.exports = {
                 attributes: 1
             }];
             producer.send(payload, function(error, result) {
-                console.log('auth sent' + result);
             });
 
         } catch (err) {
