@@ -31,8 +31,9 @@ passport.use(strategy);
 
 var app = express();
 app.use(passport.initialize());
+
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
 }));
 app.use(bodyParser.json());
 
