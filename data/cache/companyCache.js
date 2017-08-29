@@ -13,7 +13,7 @@ module.exports = {
     },
     SaveCompany: async function (company) {
         try {
-            await cache.client.setAsync(company._id, JSON.stringify(company));
+            await cache.client.setAsync(company._id.toString(), JSON.stringify(company));
         }
         catch (err) {
             console.log("companyCache-SaveCompany: " + err);

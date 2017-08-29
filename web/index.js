@@ -42,17 +42,19 @@ app.post('/auth/token', function (req, res) {
 
 // company GET request
 app.get('/api/companies/:companyID', function (req, res) {
-    console.log("here");
     try {
 
         var id = req.params.companyID;
-        console.log(id);
-        var comapny = companyMethods.GetCompany(id);
-        if (company) {
-            res.status(200).send(company);
-        } else {
-            res.status(401).send();
-        }
+
+        companyMethods.GetCompany(id).then(function (company) {
+            if (company) {
+                res.status(200).send(company);
+            } else {
+
+                res.status(401).send();
+            }
+        });
+
 
     } catch (err) {
         console.log("Error in getting Company by Id - " + err);
@@ -60,17 +62,50 @@ app.get('/api/companies/:companyID', function (req, res) {
     }
 });
 
+app.get('/api/companies', function (req, res) {
+    try {
+        companyMethods.GetCompanies().then(function (companies) {
+            if (companies) {
+                res.status(200).send(companies);
+            }
+            else {
+                res.status(401).send();
+            }
+        });
+    }
+    catch (err) {
+        console.log("Error in getting Companies - " + err);
+        res.status(500).send();
+    }
+});
+
+app.delete('/api/companies/:companyID', function (req, res){
+    try{
+        var id = req.params.companyID;
+        
+        companyMethods.InactivateCompany(id).then(function () {
+            res.status(200).send();
+        });
+        
+    } catch(err)
+    {
+        console.error("Error deleting Company:" + err);
+        res.status(500).send();
+    }
+});
+
 app.post('/api/companies', function (req, res) {
     try {
+        // create company schema
         if (req.body) {
             var reqBody = req.body;
             var created = date.Date();
-            var company = new Company({ 
-                name: reqBody.name, 
-                address1: reqBody.address1, 
-                address2: reqBody.address2, 
-                city: reqBody.city, 
-                state: reqBody.state, 
+            var company = new Company({
+                name: reqBody.name,
+                address1: reqBody.address1,
+                address2: reqBody.address2,
+                city: reqBody.city,
+                state: reqBody.state,
                 zipCode: reqBody.zipCode,
                 postal: reqBody.postal,
                 contactEmail: reqBody.contactEmail,
@@ -79,9 +114,11 @@ app.post('/api/companies', function (req, res) {
                 isActive: true,
                 isSuspended: false
             });
-            console.log(company);
+            // Save Comapny
             companyMethods.CreateCompany(company);
-        }else{
+            // send response
+            res.status(200).send(company._id.toString());
+        } else {
             res.status(401).send();
         }
     } catch (err) {

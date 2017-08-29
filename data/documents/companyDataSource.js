@@ -3,35 +3,42 @@ var Company = require("../../app/models/company");
 module.exports = {
     GetCompany: async function (companyID) {
         try {
-            var customer = await Company.findById(companyID);
-            if(!customer){
-                console.log("Could not find Company by ID: " + companyID );
-            }
-            return customer;
+            let c = await Company.findById(companyID);
+
+            return c;
+
         } catch (err) {
             console.error("Error in companyDataSource - GetCompany: " + err);
         }
     },
     GetCompanies: async function () {
         try {
-            var companies = await Company.find();
+            console.log('Companies queried');
+            let companies = await Company.find();
+            console.log('gg');
             return companies;
+
         } catch (err) {
             console.error("Error in companyDataSource - GetCompanies: " + err);
         }
     },
     SaveCompany: async function (company) {
         try {
-            company.save();
+            await company.save(function (err) {
+
+            });
+
+            return company;
+
         } catch (err) {
             console.error("Error in companyDataSource - SaveCompany: " + err);
         }
     },
-    DeleteCompany: async function (customerID) {
-        try{
-            await Company.findByIdAndUpdate(companyID, {"isActive" : false});
+    DeleteCompany: async function (companyID) {
+        try {
+            await Company.findByIdAndUpdate(companyID, { "isActive": false });
         }
-        catch(err) {
+        catch (err) {
 
         }
     }

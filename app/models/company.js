@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
-module.exports = mongoose.model('Company', new Schema({
+const CompanySchema = new Schema({
     name: String,
     address1: String,
     address2: String,
@@ -13,4 +12,14 @@ module.exports = mongoose.model('Company', new Schema({
     created: Date,
     isSuspended: Boolean,
     isActive: Boolean
-}));
+});
+
+CompanySchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+    }
+});
+
+module.exports = mongoose.model('Company', CompanySchema);
