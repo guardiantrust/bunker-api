@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
-module.exports = mongoose.model('Part', new Schema({
+var PartSchema = new Schema({
     barCode: String,
     name: String,
     description: String,
@@ -11,4 +10,14 @@ module.exports = mongoose.model('Part', new Schema({
     partAttributes: [PartAttribute],
     files: [PartFile],
     created: Date
-}));
+});
+
+PartSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        ret.partID = ret._id;
+        delete ret._id;
+        delete ret.__v;
+    }
+});
+
+module.exports = mongoose.model('Part', PartSchema);

@@ -3,7 +3,7 @@ var Machine = require("../../app/models/machine");
 moduels.exports = {
     GetMachine: async function (machineID) {
         try {
-            var machine = await Machine.findById(machineID);
+            let machine = await Machine.findById(machineID);
             if (!machine) {
                 console.log("Could not find machine by id:" + machineID);
             }
@@ -39,6 +39,14 @@ moduels.exports = {
             machine.save();
         } catch (err) {
             console.log("Error in machineDataSource - DeleteMachine: " + err);
+        }
+    },
+    UpdateMachine: async function (machine) {
+        try {
+            await Machine.findOneAndUpdate({ _id: machine.machineID }, { $set: { name: machine.name, description: machine.description, location: machine.location, isActive: machine.isActive } });
+
+        } catch (err) {
+            console.error("Erorr in machineDataSource - UpdateMachine: " + err);
         }
     }
 

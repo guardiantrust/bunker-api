@@ -16,7 +16,7 @@ const CompanySchema = new Schema({
 
 CompanySchema.set('toJSON', {
     transform: function(doc, ret, options) {
-        ret.id = ret._id;
+        ret.companyID = ret._id;
         delete ret._id;
         delete ret.__v;
     }

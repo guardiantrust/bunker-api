@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
-module.exports = mongoose.model('User', new Schema({
+var UserSchema = new Schema({
     firstName: String,
     lastName: String,
     email: String,
@@ -13,4 +12,14 @@ module.exports = mongoose.model('User', new Schema({
     created: Date,
     roles: [Role],
     companyID: Schema.Types.ObjectId
-}));
+});
+
+UserSchema.set('toJSON', {
+    transform: function(doc, ret, options) {
+        ret.userID = ret._id;
+        delete ret._id;
+        delete ret.__v;
+    }
+});
+
+module.exports = mongoose.model('User', UserSchema);

@@ -7,6 +7,8 @@ var Company = require("../../../app/models/company");
 module.exports = {
     GetCompany: async function (companyID) {
         try {
+            //Check cache
+            companyCache.GetCompany(companyID);
             let company = await companyDS.GetCompany(companyID);
 
             if (!company) {
