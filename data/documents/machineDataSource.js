@@ -43,7 +43,8 @@ moduels.exports = {
     },
     UpdateMachine: async function (machine) {
         try {
-            await Machine.findOneAndUpdate({ _id: machine.machineID }, { $set: { name: machine.name, description: machine.description, location: machine.location, isActive: machine.isActive } });
+            await Machine.findOneAndUpdate({ _id: machine.machineID }, 
+                { $set: { name: machine.name, description: machine.description, location: machine.location, isActive: machine.isActive } });
 
         } catch (err) {
             console.error("Erorr in machineDataSource - UpdateMachine: " + err);
