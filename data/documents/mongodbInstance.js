@@ -1,10 +1,11 @@
 var mongoose = require('mongoose');
 var env = require('../../config/index');
 
-mongoose.connect(env.db_connection, function(err){
-    if(err){
+
+mongoose.connect(env.db_connection, function(err) {
+    if (err) {
         //console.log(env);
-        console.log("Error with mongodb connection: " +err);
+        console.log("Error with mongodb connection: " + err);
     }
 });
 

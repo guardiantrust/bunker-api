@@ -1,7 +1,7 @@
 var cache = require('./redisCache');
 
 module.exports = {
-    GetLogin: async function (userName, password) {
+    GetLogin: async function(userName, password) {
         try {
             var result = await cache.client.getAsync(userName);
 
@@ -10,16 +10,14 @@ module.exports = {
             }
 
             return result;
-        }
-        catch (err) {
+        } catch (err) {
             console.log("authCache: " + err);
         }
     },
-    AddLogin: async function (userName, password) {
+    AddLogin: async function(userName, password) {
         try {
             await cache.client.setAsync(userName, password);
-        }
-        catch (err) {
+        } catch (err) {
             console.log("authCache: " + err);
         }
     }

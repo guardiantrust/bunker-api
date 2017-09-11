@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+
 var Schema = mongoose.Schema;
 var UserSchema = new Schema({
     firstName: String,
@@ -10,7 +11,7 @@ var UserSchema = new Schema({
     isActive: Boolean,
     sMS: String,
     created: Date,
-    roles: [Role],
+    roles: [Schema.Types.ObjectId],
     companyID: Schema.Types.ObjectId
 });
 
