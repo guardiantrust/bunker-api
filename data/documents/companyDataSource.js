@@ -13,9 +13,7 @@ module.exports = {
     },
     GetCompanies: async function () {
         try {
-            console.log('Companies queried');
             let companies = await Company.find();
-            console.log('gg');
             return companies;
 
         } catch (err) {

@@ -35,6 +35,9 @@ module.exports = {
             if (!user || !user.isActive) {
                 console.log(login.userID);
                 return null;
+            } else {
+                //Delete old token
+                await tokenDS.DeleteToken(user._id);
             }
 
             var newToken = new Token({
@@ -43,9 +46,11 @@ module.exports = {
                 issuedAt: Date.now(),
                 expiresAt: Date.now() + (2 * 60 * 60 * 1000)
             });
-            //var payload = { id: login.userID, userName: login.userName, companyID: };
+
             let token = jwt.sign(newToken.toJSON(), env.secureKey);
+            // Add token to new Token schema - we do this after the JWT is created to reduce reduncency
             newToken.token = token;
+            // Save new token
             tokenDS.SaveToken(newToken);
             authCache.AddLogin(newToken);
             return token;
@@ -70,51 +75,59 @@ module.exports = {
 
         if (token) {
             var parsedToken = jwt.decode(token);
-            console.log(parsedToken);
+            var tok = new Token(parsedToken);
             //Check parsed token is valid
-            if (!parsedToken || !parsedToken.userID || !parsedToken.companyID) {
+            if (!tok.userID || !tok.companyID) {
                 return res.status(403).send({
                     success: false,
                     message: 'Token invalid format.'
                 });
-            } else {
-                console.log('Token not valid');
             }
+
             // Check token has not expired
-            if (parsedToken && parsedToken.expiresAt > Date.now()) {
-                next();
-                valid = true;
-            } else {
+            if (tok.expiresAt < Date.now()) {
                 console.log(Date.now());
                 console.log('Token Expired');
             }
-            // Check token is in cache
-            var cachedToken = await authCache.GetLogin(parsedToken.userID)
-            if (cachedToken && cachedToken == token) {
-                next();
-                valid = true;
-            } else {
-                console.log('Token not in cache');
+
+            if (!valid) {
+                // Check token is in cache
+                var cachedTokenResult = await authCache.GetLogin(tok.userID)
+                var cachedToken = JSON.parse(cachedTokenResult);
+
+                if (cachedToken.token == token) {
+                    valid = true;
+                    console.debug('Authenticated in Cache');
+                } else {
+                    console.log('Token not in cache');
+                }
             }
 
-            //Check token is in DB
-            var dbToken = await tokenDS.GetToken(parsedToken.userID);
-            if (dbToken && dbToken.token == token) {
-                next();
-                valid = true;
-            } else {
-                console.log('Token not in DB');
+            if (!valid) {
+                //Check token is in DB
+                var dbToken = await tokenDS.GetToken(tok.userID);
+                if (dbToken.token == token) {
+                    valid = true;
+                    console.debug('Autnenticated in DB');
+                } else {
+                    console.log('Token not in DB');
+                }
             }
 
             if (!valid) {
                 // Something didnt pass - fail and cleanup
-                authCache.RemoveLogin(token.userID);
+                //Delete from Cache
+                authCache.RemoveLogin(tok.userID);
+                // Delete from DB
                 tokenDS.DeleteToken(parsedToken.userID);
 
                 return res.status(403).send({
                     success: false,
                     message: 'Token Invalid.'
                 });
+            }
+            else {
+                next();
             }
 
         } else {
@@ -131,7 +144,6 @@ module.exports = {
 var encryptPassword = async function (password) {
     try {
         var hashedPassword = await crypt.hash(password, salts);
-        console.log(hashedPassword);
         return hashedPassword;
     } catch (err) {
         console.log("token - encryptPassword:" + err);
