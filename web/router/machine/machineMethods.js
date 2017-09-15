@@ -6,7 +6,8 @@ var Company = require("../../../app/models/machine");
 module.exports = {
      GetMachine: async function(machineID) {
          try{
-
+            var machine = await machineDS.GetMachine(machineID);
+            return machine;
          }
          catch(err) {
              console.error("Error in machineMethods - Getmachine: " + err);
@@ -14,7 +15,9 @@ module.exports = {
      },
      GetMachines: async function(companyID) {
          try {
-
+             
+            var machines = await machineDS.GetMachines(companyID);
+            return machines;
          } catch(err) {
              console.error("Error in machineMethods - GetMachines: " + err);
          }

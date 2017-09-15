@@ -1,6 +1,7 @@
 var mongoose = require("../documents/mongodbInstance");
 var Machine = require("../../app/models/machine");
-moduels.exports = {
+
+module.exports = {
     GetMachine: async function (machineID) {
         try {
             let machine = await Machine.findById(machineID);
@@ -13,7 +14,7 @@ moduels.exports = {
             console.log("Error in machineDataSource - GetMachine: " + err);
         }
     },
-    GetMachines: async function (customerID) {
+    GetMachines: async function (companyID) {
         try {
             var machines = await Machine.find({ 'companyID': companyID });
             return machines;
@@ -23,7 +24,11 @@ moduels.exports = {
     },
     SaveMachine: async function (machine) {
         try {
-            await machine.save();
+            await machine.save(function(err) {
+                if(err) {
+                    console.log("Error in SaveMachine " + err);
+                }
+            });
         } catch (err) {
             console.log("Error in machineDataSource - SaveMachine: " + err);
         }

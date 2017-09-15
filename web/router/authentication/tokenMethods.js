@@ -137,6 +137,15 @@ module.exports = {
             });
         }
 
+    },
+    GetCompanyIDFromToken: function(token) {
+        try{
+            var parsedToken = jwt.decode(token);
+            var tok = new Token(parsedToken);
+            return tok.companyID;
+        } catch(err) {
+            console.log("tokenMethods - GetCompanyIDFromToken : " + err);
+        }
     }
 
 }
