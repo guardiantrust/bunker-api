@@ -96,8 +96,7 @@ app.post("/loginUser", function(req, res){
 
         });
 
-res.send(200);
-    
+    res.send(200);
 });
 
 app.listen(9010, function() {
